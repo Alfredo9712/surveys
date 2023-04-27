@@ -1,4 +1,4 @@
-import { type NextPage } from "next";
+import { GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -6,7 +6,14 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "~/utils/api";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "../server/auth";
+import { redirect } from "next/dist/server/api-utils";
+
 const Home: NextPage = () => {
+  const { data: sessionData } = useSession();
+
+  console.log(sessionData);
   return (
     <>
       <Head>
@@ -16,15 +23,18 @@ const Home: NextPage = () => {
       </Head>
       <div className="hero min-h-screen bg-base-200  ">
         <div className="hero-content text-center">
-          <div className="max-w-lg">
-            <h1 className="text-5xl font-bold">Welcome to Surveys</h1>
-            <p className="py-6">
+          <div className="max-w-xl">
+            <h1 className="text-6xl font-bold">Welcome to Surveys</h1>
+            <p className="py-6 text-lg">
               Enhance your data-driven decision making with our survey web
               application. Our survey application is designed to deliver
               accurate and reliable results for your business needs. Join today
               by signing in with your Github account
             </p>
-            <button className=" justify-content-center btn-primary btn mx-auto flex gap-3 ">
+            <button
+              className="justify-content-center btn-primary btn mx-auto flex gap-3 "
+              onClick={sessionData ? () => void signOut() : () => void signIn()}
+            >
               Sign in with github
               <Image
                 src="/images/github.png"
@@ -67,3 +77,21 @@ const AuthShowcase: React.FC = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/dash",
+        permanent: true,
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
+}
