@@ -6,7 +6,7 @@ import { authOptions } from "../server/auth";
 
 import { api } from "~/utils/api";
 
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
