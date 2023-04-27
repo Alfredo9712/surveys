@@ -1,14 +1,12 @@
-import { GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-
 import { signIn, signOut, useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../server/auth";
 
 import { api } from "~/utils/api";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "../server/auth";
-import { redirect } from "next/dist/server/api-utils";
+import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
