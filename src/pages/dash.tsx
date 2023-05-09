@@ -1,7 +1,7 @@
 import React from "react";
 
-const dash = () => {
+const Dash = () => {
   return <div>dash</div>;
 };
 
-export default dash;
+export default Dash;
