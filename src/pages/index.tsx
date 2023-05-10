@@ -11,7 +11,6 @@ import type { GetServerSidePropsContext, NextPage } from "next";
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
 
-  console.log(sessionData);
   return (
     <>
       <Head>

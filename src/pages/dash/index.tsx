@@ -1,7 +1,7 @@
 import type { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import React from "react";
-import { authOptions } from "../server/auth";
+import { authOptions } from "../../server/auth";
 
 const Dash = () => {
   return <div>dash</div>;
