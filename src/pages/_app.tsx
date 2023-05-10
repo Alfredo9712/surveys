@@ -1,6 +1,8 @@
+import { SessionProvider } from "next-auth/react";
+import DashLayout from "~/components/layouts/DashLayout";
+
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 
 import { api } from "~/utils/api";
 
@@ -12,8 +14,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      {/* <Navbar /> */}
-      <Component {...pageProps} />
+      <DashLayout>
+        <Component {...pageProps} />
+      </DashLayout>
     </SessionProvider>
   );
 };
