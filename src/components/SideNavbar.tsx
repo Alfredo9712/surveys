@@ -1,11 +1,18 @@
 import React from "react";
+
+import { RiHome2Fill, RiSurveyFill } from "react-icons/ri";
+
 import Link from "next/link";
 
 const SideNavbar = () => {
   return (
-    <div className="flex h-screen w-32 flex-col items-center  bg-base-200 p-3">
-      <Link href={"/dash"}>home</Link>
-      <Link href={"/dash"}></Link>
+    <div className="s flex h-screen w-32 flex-col items-center gap-9 bg-base-200 p-3 pt-7">
+      <Link href={"/dash"}>
+        <RiHome2Fill size={25} />
+      </Link>
+      <Link href={"/dash"}>
+        <RiSurveyFill size={25} />
+      </Link>
     </div>
   );
 };
