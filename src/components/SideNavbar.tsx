@@ -1,6 +1,5 @@
 import React from "react";
 import { signOut, useSession } from "next-auth/react";
-
 import { RiHome2Fill, RiSurveyFill, RiLogoutBoxRFill } from "react-icons/ri";
 import Link from "next/link";
 
