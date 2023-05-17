@@ -16,7 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const { pathname } = useRouter();
   return (
     <SessionProvider session={session}>
-      {pathname === "/dash" ? (
+      {pathname.includes("/dash") ? (
         <DashLayout>
           <Component {...pageProps} />
         </DashLayout>

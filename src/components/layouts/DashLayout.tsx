@@ -11,7 +11,7 @@ const DashLayout: FC<DashLayoutProps> = ({ children }) => {
   return (
     <div className="flex">
       <SideNavbar />
-      {children}
+      <div className="w-screen bg-slate-600 pt-3">{children}</div>
     </div>
   );
 };

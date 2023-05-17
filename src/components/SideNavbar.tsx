@@ -10,7 +10,7 @@ const SideNavbar = () => {
       <Link href={"/dash"}>
         <RiHome2Fill size={25} />
       </Link>
-      <Link href={"/dash"}>
+      <Link href={"/dash/surveys"}>
         <RiSurveyFill size={25} />
       </Link>
     </div>
