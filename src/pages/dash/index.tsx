@@ -4,7 +4,11 @@ import React from "react";
 import { authOptions } from "../../server/auth";
 
 const Dash = () => {
-  return <div className="">dash</div>;
+  return (
+    <div>
+      <h1>Create Survey</h1>
+    </div>
+  );
 };
 
 export default Dash;
