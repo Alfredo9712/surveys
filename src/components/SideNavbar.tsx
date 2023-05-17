@@ -17,6 +17,7 @@ const SideNavbar = () => {
       <RiLogoutBoxRFill
         size={25}
         onClick={sessionData ? () => void signOut() : () => null}
+        style={{ cursor: "pointer" }}
       />
     </div>
   );
