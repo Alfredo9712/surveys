@@ -7,6 +7,8 @@ const Dash = () => {
   return (
     <div>
       <h1 className="text-2xl">Create Survey</h1>
+      {/* Add Button to add question component, Maybe use local state to handle that? */}
+      <button className="btn-secondary btn">Save & Submit </button>
     </div>
   );
 };
