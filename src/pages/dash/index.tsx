@@ -6,7 +6,7 @@ import { authOptions } from "../../server/auth";
 const Dash = () => {
   return (
     <div>
-      <h1>Create Survey</h1>
+      <h1 className="text-2xl">Create Survey</h1>
     </div>
   );
 };
