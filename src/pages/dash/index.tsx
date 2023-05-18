@@ -6,7 +6,7 @@ import { MdAddBox } from "react-icons/md";
 
 const Dash = () => {
   return (
-    <div>
+    <div className="flex h-full flex-col bg-slate-300">
       <h1 className="mb-2 text-2xl">Create Survey</h1>
       <div className="mb-5">
         <p className="mb-1 text-sm">
@@ -15,7 +15,9 @@ const Dash = () => {
         <MdAddBox size={30} style={{ cursor: "pointer" }} />
       </div>
       {/* Add funciontality/question component, Maybe use local state to handle that before submitting the api? */}
-      <button className="btn-secondary btn">Save & Submit </button>
+      <button className="btn-secondary btn mt-auto max-w-xs self-end">
+        Save & Submit{" "}
+      </button>
     </div>
   );
 };
