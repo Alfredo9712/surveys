@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import type { GetServerSidePropsContext } from "next";
-import type { Survey, User } from "prisma/prisma-client";
+import type { Question } from "prisma/prisma-client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { MdAddBox } from "react-icons/md";
 
 const Dash = () => {
   //RouterOutputs to get type of the surveys
-  const questions = useState<Survey>();
+  const questions = useState<Question[]>();
 
   return (
     <div className="flex h-full flex-col bg-slate-300">
