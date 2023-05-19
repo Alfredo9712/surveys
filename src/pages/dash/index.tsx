@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import type { GetServerSidePropsContext } from "next";
-import type { Question } from "prisma/prisma-client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { MdAddBox } from "react-icons/md";
+import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
+
+import type { GetServerSidePropsContext } from "next";
+import type { Question } from "prisma/prisma-client";
 
 const Dash = () => {
+  const { data: sessionData } = useSession();
+
   //RouterOutputs to get type of the surveys
+
   const questions = useState<Question[]>();
 
   return (
