@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import type { GetServerSidePropsContext } from "next";
+import type { Survey, User } from "prisma/prisma-client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { MdAddBox } from "react-icons/md";
 
 const Dash = () => {
+  //RouterOutputs to get type of the surveys
+  const questions = useState<Survey>();
+
   return (
     <div className="flex h-full flex-col bg-slate-300">
       <h1 className="mb-2 text-2xl">Create Survey</h1>
@@ -15,7 +19,7 @@ const Dash = () => {
         <MdAddBox size={30} style={{ cursor: "pointer" }} />
       </div>
       {/* Add funciontality/question component, Maybe use local state to handle that before submitting the api? */}
-      <button className="btn-secondary btn mt-auto max-w-xs self-end">
+      <button className="btn-secondary btn mt-auto max-w-xs ">
         Save & Submit{" "}
       </button>
     </div>
