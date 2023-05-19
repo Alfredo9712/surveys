@@ -5,6 +5,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { prisma } from "~/server/db";
 
 export const surveyRouter = createTRPCRouter({
   hello: publicProcedure
@@ -19,7 +20,15 @@ export const surveyRouter = createTRPCRouter({
     return ctx.prisma.example.findMany();
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      const survey = prisma.survey.findMany({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return survey;
+    }),
 });
