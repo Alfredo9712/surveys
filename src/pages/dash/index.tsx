@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { MdAddBox } from "react-icons/md";
-import { RouterOutputs, api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 
 import type { GetServerSidePropsContext } from "next";
@@ -15,11 +14,14 @@ export interface QuestionType {
 }
 
 const Dash = () => {
-  const { data: sessionData } = useSession();
-
   //RouterOutputs to get type of the surveys
 
   const [questions, setQuestions] = useState<QuestionType[]>([]);
+
+  const handleUpdateQuestion = (id: string, question: QuestionType) => {
+    const updatedQuestion = questions.map((q) => (q.id === id ? question : q));
+    setQuestions(updatedQuestion);
+  };
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -27,6 +29,10 @@ const Dash = () => {
       { type: "", id: self.crypto.randomUUID(), question: "" },
     ]);
   };
+
+  useEffect(() => {
+    console.log(questions);
+  }, [questions]);
 
   return (
     <div className="flex h-full flex-col">
@@ -43,7 +49,11 @@ const Dash = () => {
       </div>
       {questions &&
         questions.map((question) => (
-          <Question key={question.id} {...question} />
+          <Question
+            key={question.id}
+            question={question}
+            handleUpdateQuestion={handleUpdateQuestion}
+          />
         ))}
       <button className="btn-secondary btn mt-auto max-w-[150px]">
         Save & Submit{" "}

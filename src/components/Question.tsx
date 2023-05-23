@@ -3,19 +3,37 @@ import React from "react";
 import type { QuestionType } from "~/pages/dash";
 import type { FC } from "react";
 
-const Question: FC<QuestionType> = ({ type, question }) => {
+interface QuestionProps {
+  question: QuestionType;
+  handleUpdateQuestion: (id: string, question: QuestionType) => void;
+}
+
+const Question: FC<QuestionProps> = ({ question, handleUpdateQuestion }) => {
+  const { id } = question;
+
+  const questionType = ["input", "dropdown"];
+
+  // const handleUpdateQuestionType = () => {
+
+  // }
+
   return (
     <div>
-      <p>question</p>
-      <select className="select w-full max-w-xs" defaultValue={"DEFAULT"}>
+      <select
+        className="primary select w-full max-w-xs"
+        defaultValue={"DEFAULT"}
+        onChange={(e) =>
+          handleUpdateQuestion(id, { ...question, type: e.target.value })
+        }
+      >
         <option disabled value="DEFAULT">
-          Pick your favorite Simpson
+          Choose the type of question
         </option>
-        <option>Homer</option>
-        <option>Marge</option>
-        <option>Bart</option>
-        <option>Lisa</option>
-        <option>Maggie</option>
+        {questionType.map((q, index) => (
+          <option key={index} value={q}>
+            {q}
+          </option>
+        ))}
       </select>
     </div>
   );
