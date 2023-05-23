@@ -80,7 +80,8 @@ model Question {
     Survey   Survey   @relation(fields: [surveyId], references: [id])
     surveyId String
     type     String
-    answers  Answer[]
+    question String
+    answer   Answer[]
 }
 
 model Answer {
