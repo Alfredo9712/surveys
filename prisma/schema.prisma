@@ -76,12 +76,12 @@ model Survey {
 }
 
 model Question {
-    id       String   @id @default(cuid())
-    Survey   Survey   @relation(fields: [surveyId], references: [id])
-    surveyId String
-    type     String
-    question String
-    answer   Answer[]
+    id          String   @id @default(cuid())
+    Survey      Survey   @relation(fields: [surveyId], references: [id])
+    surveyId    String
+    type        String
+    description String
+    answer      Answer[]
 }
 
 model Answer {

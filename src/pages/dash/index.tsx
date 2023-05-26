@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { MdAddBox } from "react-icons/md";
-import { useSession } from "next-auth/react";
 
 import type { GetServerSidePropsContext } from "next";
 import Question from "~/components/Question";
 
+export type DropdownType = "input" | "dropdown" | "textarea";
+
 export interface QuestionType {
   id: string;
   type: string;
-  question: string;
+  description: string;
 }
 
 const Dash = () => {
@@ -26,7 +27,7 @@ const Dash = () => {
   const handleAddQuestion = () => {
     setQuestions([
       ...questions,
-      { type: "", id: self.crypto.randomUUID(), question: "" },
+      { type: "", id: self.crypto.randomUUID(), description: "" },
     ]);
   };
 
