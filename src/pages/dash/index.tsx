@@ -39,7 +39,7 @@ const Dash = () => {
     <div className="flex h-full flex-col">
       <h1 className="mb-2 text-2xl">Create Survey</h1>
       <div className="mb-5">
-        <p className="mb-1 text-sm">
+        <p className="mb-3 text-sm">
           Click below to add a question to your survey
         </p>
         <MdAddBox
