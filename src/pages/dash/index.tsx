@@ -20,13 +20,15 @@ export type QuestionType = {
   description: string;
 };
 
+const initialSurvey = {
+  title: "",
+  description: "",
+  question: [],
+};
+
 const Dash = () => {
   //RouterOutputs to get type of the surveys
-  const [survey, setSurvey] = useState<Survey>({
-    title: "",
-    description: "",
-    question: [],
-  });
+  const [survey, setSurvey] = useState<Survey>(initialSurvey);
 
   const { question } = survey;
   const handleUpdateQuestion = (id: string, question: QuestionType) => {
@@ -46,13 +48,23 @@ const Dash = () => {
     });
   };
 
+  const handleDeleteQuestion = (id: string) => {
+    //if user is deleting and only one question remains, it is safe to say the user is deleting the entire survey. Reset back to initial state
+    if (question.length === 1) {
+      setSurvey(initialSurvey);
+      return;
+    }
+    const updatedQuestions = survey.question.filter((q) => id !== q.id);
+    setSurvey({ ...survey, question: updatedQuestions });
+  };
+
   useEffect(() => {
     console.log(survey);
   }, [survey]);
 
   return (
-    <div className="hide flex h-full flex-col overflow-y-auto py-10">
-      <h1 className="mb-2 text-4xl">Create Survey</h1>
+    <div className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content">
+      <h1 className="color mb-2 text-4xl ">Create Survey</h1>
       <div className="mb-5">
         <p className="text-md mb-3">
           Click below to add a question to your survey
@@ -65,7 +77,7 @@ const Dash = () => {
       </div>
       {question.length > 0 && (
         <div>
-          <div className="mb-9 flex flex-col gap-2 rounded-lg border border-slate-300 p-3 shadow-sm">
+          <div className="mb-9 flex max-w-2xl flex-col gap-2 rounded-lg border border-base-300 p-3 shadow-sm">
             <label htmlFor="survey name" className=" label-text label text-2xl">
               Survey Name
             </label>
@@ -74,6 +86,7 @@ const Dash = () => {
               type="text"
               placeholder="Test"
               name="survey name"
+              value={survey["title"]}
               onChange={(e) => setSurvey({ ...survey, title: e.target.value })}
             />
           </div>
@@ -82,6 +95,7 @@ const Dash = () => {
               key={question.id}
               question={question}
               handleUpdateQuestion={handleUpdateQuestion}
+              handleDeleteQuestion={handleDeleteQuestion}
             />
           ))}
         </div>
