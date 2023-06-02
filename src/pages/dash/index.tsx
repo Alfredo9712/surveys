@@ -8,54 +8,84 @@ import Question from "~/components/Question";
 
 export type DropdownType = "input" | "dropdown" | "textarea";
 
-export interface QuestionType {
+type Survey = {
+  title: string;
+  description?: string;
+  question: QuestionType[];
+};
+
+export type QuestionType = {
   id: string;
   type: string;
   description: string;
-}
+};
 
 const Dash = () => {
   //RouterOutputs to get type of the surveys
+  const [survey, setSurvey] = useState<Survey>({
+    title: "",
+    description: "",
+    question: [],
+  });
 
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
-
+  const { question } = survey;
   const handleUpdateQuestion = (id: string, question: QuestionType) => {
-    const updatedQuestion = questions.map((q) => (q.id === id ? question : q));
-    setQuestions(updatedQuestion);
+    const updatedQuestions = survey.question.map((q) =>
+      q.id === id ? question : q
+    );
+    setSurvey({ ...survey, question: updatedQuestions });
   };
 
   const handleAddQuestion = () => {
-    setQuestions([
-      ...questions,
-      { type: "", id: self.crypto.randomUUID(), description: "" },
-    ]);
+    setSurvey({
+      ...survey,
+      question: [
+        ...survey.question,
+        { type: "", id: self.crypto.randomUUID(), description: "" },
+      ],
+    });
   };
 
   useEffect(() => {
-    console.log(questions);
-  }, [questions]);
+    console.log(survey);
+  }, [survey]);
 
   return (
-    <div className="flex h-full flex-col">
-      <h1 className="mb-2 text-2xl">Create Survey</h1>
+    <div className="hide flex h-full flex-col overflow-y-auto py-10">
+      <h1 className="mb-2 text-4xl">Create Survey</h1>
       <div className="mb-5">
-        <p className="mb-3 text-sm">
+        <p className="text-md mb-3">
           Click below to add a question to your survey
         </p>
         <MdAddBox
-          size={30}
+          size={33}
           style={{ cursor: "pointer" }}
           onClick={handleAddQuestion}
         />
       </div>
-      {questions &&
-        questions.map((question) => (
-          <Question
-            key={question.id}
-            question={question}
-            handleUpdateQuestion={handleUpdateQuestion}
-          />
-        ))}
+      {question.length > 0 && (
+        <div>
+          <div className="mb-9 flex flex-col gap-2 rounded-lg border border-slate-300 p-3 shadow-sm">
+            <label htmlFor="survey name" className=" label-text label text-2xl">
+              Survey Name
+            </label>
+            <input
+              className="input-bordered input input-sm w-full max-w-xs"
+              type="text"
+              placeholder="Test"
+              name="survey name"
+              onChange={(e) => setSurvey({ ...survey, title: e.target.value })}
+            />
+          </div>
+          {question.map((question) => (
+            <Question
+              key={question.id}
+              question={question}
+              handleUpdateQuestion={handleUpdateQuestion}
+            />
+          ))}
+        </div>
+      )}
       <button className="btn-secondary btn mt-auto max-w-[150px]">
         Save & Submit{" "}
       </button>

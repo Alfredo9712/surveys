@@ -18,9 +18,9 @@ const Question: FC<QuestionProps> = ({ question, handleUpdateQuestion }) => {
   ];
 
   return (
-    <div className="mb-9 flex flex-col gap-5 rounded-lg border border-slate-300 p-4 shadow-xl">
+    <div className="z-30 mb-9 flex flex-col gap-5 rounded-lg border border-slate-300 p-4 shadow-sm ">
       <div className="flex flex-col gap-1">
-        <label htmlFor="description" className="label-text label ">
+        <label htmlFor="description" className="label-text label text-xl ">
           Question description
         </label>
         <input
@@ -38,7 +38,7 @@ const Question: FC<QuestionProps> = ({ question, handleUpdateQuestion }) => {
       </div>
       <div>
         <select
-          className="primary select w-full max-w-xs"
+          className=" select select-sm w-full max-w-xs "
           defaultValue={"DEFAULT"}
           onChange={(e) =>
             handleUpdateQuestion(id, { ...question, type: e.target.value })

@@ -9,9 +9,9 @@ interface DashLayoutProps {
 
 const DashLayout: FC<DashLayoutProps> = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <SideNavbar />
-      <div className="w-screen p-10">{children}</div>
+      <div className="z-0 w-screen px-10">{children}</div>
     </div>
   );
 };
