@@ -8,7 +8,7 @@ import Question from "~/components/Question";
 
 export type DropdownType = "input" | "dropdown" | "textarea";
 
-type Survey = {
+export type Survey = {
   title: string;
   description?: string;
   question: QuestionType[];
@@ -26,9 +26,32 @@ const initialSurvey = {
   question: [],
 };
 
+const Toast = ({ title = "Invalid form" }: { title?: string }) => {
+  return (
+    <div className="alert alert-error mb-5">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-6 w-6 shrink-0 stroke-current"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <span>{title}</span>
+    </div>
+  );
+};
+
 const Dash = () => {
   //RouterOutputs to get type of the surveys
   const [survey, setSurvey] = useState<Survey>(initialSurvey);
+  const [isInvalidForm, setIsInavalidForm] = useState(false);
+  const [toastTitle, setToastTitle] = useState("");
 
   const { question } = survey;
   const handleUpdateQuestion = (id: string, question: QuestionType) => {
@@ -58,16 +81,36 @@ const Dash = () => {
     setSurvey({ ...survey, question: updatedQuestions });
   };
 
+  const handleSubmitSurvey = () => {
+    if (survey["title"] === "") return setIsInavalidForm(true);
+  };
+
   useEffect(() => {
     console.log(survey);
   }, [survey]);
 
+  // clear invalid form toast after 3.5 seconds
+  useEffect(() => {
+    if (!isInvalidForm) return;
+
+    const invalidFormTimeout = setInterval(() => {
+      setIsInavalidForm(false);
+    }, 3500);
+
+    return () => {
+      clearInterval(invalidFormTimeout);
+    };
+  }, [isInvalidForm]);
+
   return (
     <div className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content">
-      <h1 className="color mb-2 text-4xl ">Create Survey</h1>
+      {isInvalidForm && <Toast />}
+      <h1 className="color mb-4 text-4xl ">Create Survey</h1>
       <div className="mb-5">
         <p className="text-md mb-3">
-          Click below to add a question to your survey
+          {question.length <= 0
+            ? "Click below to add a question to your survey"
+            : "Click below to add another question"}
         </p>
         <MdAddBox
           size={33}
@@ -75,6 +118,7 @@ const Dash = () => {
           onClick={handleAddQuestion}
         />
       </div>
+
       {question.length > 0 && (
         <div>
           <div className="mb-9 flex max-w-2xl flex-col gap-2 rounded-lg border border-base-300 p-3 shadow-sm">
@@ -100,8 +144,11 @@ const Dash = () => {
           ))}
         </div>
       )}
-      <button className="btn-secondary btn mt-auto max-w-[150px]">
-        Save & Submit{" "}
+      <button
+        className="btn-secondary btn mt-auto max-w-[150px]"
+        onClick={handleSubmitSurvey}
+      >
+        Save & Submit
       </button>
     </div>
   );
