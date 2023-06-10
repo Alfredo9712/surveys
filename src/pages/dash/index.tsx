@@ -5,12 +5,13 @@ import { MdAddBox } from "react-icons/md";
 
 import type { GetServerSidePropsContext } from "next";
 import Question from "~/components/Question";
+import { api } from "~/utils/api";
 
 export type DropdownType = "input" | "dropdown" | "textarea";
 
 export type Survey = {
   title: string;
-  description?: string;
+  description: string;
   question: QuestionType[];
 };
 
@@ -54,6 +55,9 @@ const Dash = () => {
   const [toastTitle, setToastTitle] = useState("");
 
   const { question } = survey;
+
+  const { mutate } = api.survey.create.useMutation({});
+
   const handleUpdateQuestion = (id: string, question: QuestionType) => {
     const updatedQuestions = survey.question.map((q) =>
       q.id === id ? question : q
@@ -82,7 +86,11 @@ const Dash = () => {
   };
 
   const handleSubmitSurvey = () => {
-    if (survey["title"] === "") return setIsInavalidForm(true);
+    if (survey["title"] === "" || question.length === 0) {
+      return setIsInavalidForm(true);
+    }
+
+    mutate({ survey });
   };
 
   useEffect(() => {

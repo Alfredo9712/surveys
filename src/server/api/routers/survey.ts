@@ -47,11 +47,11 @@ export const surveyRouter = createTRPCRouter({
         survey: z.object({
           title: z.string(),
           description: z.string(),
-          question: z.array(questionSchema),
+          question: z.array(questionSchema || []),
         }),
       })
     )
-    .query(({ input }) =>
+    .mutation(({ input }) =>
       prisma.survey.create({
         data: {
           title: input.survey.title,
