@@ -25,7 +25,7 @@ const Question: FC<QuestionProps> = ({
 
   return (
     <div className="z-30 mb-9 flex max-w-2xl  justify-between rounded-lg border border-base-300 p-3 shadow-sm">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-grow flex-col gap-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="description" className="label-text label text-xl ">
             Question description
@@ -33,7 +33,7 @@ const Question: FC<QuestionProps> = ({
           <input
             type="text"
             placeholder="Test"
-            className="input-bordered input input-sm w-full max-w-xs"
+            className="input-bordered input input-sm w-full "
             name="description"
             value={question["description"]}
             onChange={(e) =>

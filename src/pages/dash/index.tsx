@@ -27,9 +27,16 @@ const initialSurvey = {
   question: [],
 };
 
-const Toast = ({ title = "Invalid form" }: { title?: string }) => {
+const Toast = ({
+  message = "Invalid form",
+  type,
+}: {
+  message: string;
+  type: string;
+}) => {
+  console.log(type);
   return (
-    <div className="alert alert-error mb-5">
+    <div className={`alert alert-${type} mb-5`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-6 w-6 shrink-0 stroke-current"
@@ -43,7 +50,7 @@ const Toast = ({ title = "Invalid form" }: { title?: string }) => {
           d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <span>{title}</span>
+      <span>{message}</span>
     </div>
   );
 };
@@ -51,12 +58,18 @@ const Toast = ({ title = "Invalid form" }: { title?: string }) => {
 const Dash = () => {
   //RouterOutputs to get type of the surveys
   const [survey, setSurvey] = useState<Survey>(initialSurvey);
-  const [isInvalidForm, setIsInavalidForm] = useState(false);
-  const [toastTitle, setToastTitle] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastInfo, setToastInfo] = useState({ message: "", type: "" });
 
   const { question } = survey;
 
-  const { mutate } = api.survey.create.useMutation({});
+  const { mutate, isLoading } = api.survey.create.useMutation({
+    onSuccess: () => {
+      setSurvey(initialSurvey);
+      setToastInfo({ message: "Survey created successfully", type: "success" });
+      setShowToast(true);
+    },
+  });
 
   const handleUpdateQuestion = (id: string, question: QuestionType) => {
     const updatedQuestions = survey.question.map((q) =>
@@ -87,7 +100,9 @@ const Dash = () => {
 
   const handleSubmitSurvey = () => {
     if (survey["title"] === "" || question.length === 0) {
-      return setIsInavalidForm(true);
+      setToastInfo({ message: "Invalid form", type: "error" });
+      setShowToast(true);
+      return;
     }
 
     mutate({ survey });
@@ -99,34 +114,36 @@ const Dash = () => {
 
   // clear invalid form toast after 3.5 seconds
   useEffect(() => {
-    if (!isInvalidForm) return;
+    if (!showToast) return;
 
     const invalidFormTimeout = setInterval(() => {
-      setIsInavalidForm(false);
+      setShowToast(false);
+      setToastInfo({ message: "", type: "" });
     }, 3500);
 
     return () => {
       clearInterval(invalidFormTimeout);
     };
-  }, [isInvalidForm]);
+  }, [showToast]);
 
   return (
     <div className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content">
-      {isInvalidForm && <Toast />}
+      {showToast && (
+        <Toast message={toastInfo["message"]} type={toastInfo["type"]} />
+      )}
       <h1 className="color mb-4 text-4xl ">Create Survey</h1>
-      <div className="mb-5">
-        <p className="text-md mb-3">
-          {question.length <= 0
-            ? "Click below to add a question to your survey"
-            : "Click below to add another question"}
-        </p>
-        <MdAddBox
-          size={33}
-          style={{ cursor: "pointer" }}
-          onClick={handleAddQuestion}
-        />
-      </div>
-
+      {question.length <= 0 && (
+        <div className="mb-5">
+          <p className="text-md mb-3">
+            Click below to add a question to your survey
+          </p>
+          <MdAddBox
+            size={33}
+            style={{ cursor: "pointer" }}
+            onClick={handleAddQuestion}
+          />
+        </div>
+      )}
       {question.length > 0 && (
         <div>
           <div className="mb-9 flex max-w-2xl flex-col gap-2 rounded-lg border border-base-300 p-3 shadow-sm">
@@ -134,7 +151,7 @@ const Dash = () => {
               Survey Name
             </label>
             <input
-              className="input-bordered input input-sm w-full max-w-xs"
+              className="input-bordered input input-sm w-full "
               type="text"
               placeholder="Test"
               name="survey name"
@@ -150,11 +167,20 @@ const Dash = () => {
               handleDeleteQuestion={handleDeleteQuestion}
             />
           ))}
+          <div className="mb-5 flex items-center gap-2">
+            <MdAddBox
+              size={33}
+              style={{ cursor: "pointer" }}
+              onClick={handleAddQuestion}
+            />
+            <p className="text-md">Add question</p>
+          </div>
         </div>
       )}
       <button
         className="btn-secondary btn mt-auto max-w-[150px]"
         onClick={handleSubmitSurvey}
+        disabled={isLoading}
       >
         Save & Submit
       </button>
