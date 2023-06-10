@@ -45,8 +45,12 @@ const Question: FC<QuestionProps> = ({
           />
         </div>
         <div>
+          <label htmlFor="questionType" className="label-text label text-xl ">
+            Question type
+          </label>
           <select
             className=" select select-sm w-full max-w-xs "
+            name="questionType"
             defaultValue={"DEFAULT"}
             onChange={(e) =>
               handleUpdateQuestion(id, { ...question, type: e.target.value })
