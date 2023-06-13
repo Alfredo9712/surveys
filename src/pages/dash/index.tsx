@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../server/auth";
 import { MdAddBox } from "react-icons/md";
+import { getServerSession } from "next-auth";
+
+import Question from "~/components/Question";
+
+import { authOptions } from "../../server/auth";
+import { api } from "~/utils/api";
 
 import type { GetServerSidePropsContext } from "next";
-import Question from "~/components/Question";
-import { api } from "~/utils/api";
 
 export type DropdownType = "input" | "dropdown" | "textarea";
 
@@ -100,6 +102,7 @@ const Dash = () => {
 
   const handleSubmitSurvey = () => {
     if (survey["title"] === "" || question.length === 0) {
+      //TODO: add more validation
       setToastInfo({ message: "Invalid form", type: "error" });
       setShowToast(true);
       return;
