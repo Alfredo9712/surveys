@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MdAddBox } from "react-icons/md";
 import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 
 import Question from "~/components/Question";
 
@@ -29,14 +30,13 @@ const initialSurvey = {
   question: [],
 };
 
-const Toast = ({
+export const Toast = ({
   message = "Invalid form",
   type,
 }: {
   message: string;
   type: string;
 }) => {
-  console.log(type);
   return (
     <div className={`alert alert-${type} mb-5`}>
       <svg
@@ -58,18 +58,41 @@ const Toast = ({
 };
 
 const Dash = () => {
-  //RouterOutputs to get type of the surveys
+  const { data: sessionData } = useSession();
   const [survey, setSurvey] = useState<Survey>(initialSurvey);
   const [showToast, setShowToast] = useState(false);
   const [toastInfo, setToastInfo] = useState({ message: "", type: "" });
 
   const { question } = survey;
 
-  const { mutate, isLoading } = api.survey.create.useMutation({
+  // clear invalid form toast after 3.5 seconds
+  useEffect(() => {
+    if (!showToast) return;
+
+    const invalidFormTimeout = setInterval(() => {
+      setShowToast(false);
+      setToastInfo({ message: "", type: "" });
+    }, 3500);
+
+    return () => {
+      clearInterval(invalidFormTimeout);
+    };
+  }, [showToast]);
+
+  if (!sessionData?.user?.id) {
+    return (
+      <Toast message={"Must be signed in to create survey"} type={"error"} />
+    );
+  }
+
+  const ctx = api.useContext();
+
+  const { mutate, isLoading } = api.user.createSurvey.useMutation({
     onSuccess: () => {
       setSurvey(initialSurvey);
       setToastInfo({ message: "Survey created successfully", type: "success" });
       setShowToast(true);
+      void ctx.user.getSurveysById.invalidate();
     },
   });
 
@@ -108,26 +131,8 @@ const Dash = () => {
       return;
     }
 
-    mutate({ survey });
+    mutate({ survey, id: sessionData?.user.id });
   };
-
-  useEffect(() => {
-    console.log(survey);
-  }, [survey]);
-
-  // clear invalid form toast after 3.5 seconds
-  useEffect(() => {
-    if (!showToast) return;
-
-    const invalidFormTimeout = setInterval(() => {
-      setShowToast(false);
-      setToastInfo({ message: "", type: "" });
-    }, 3500);
-
-    return () => {
-      clearInterval(invalidFormTimeout);
-    };
-  }, [showToast]);
 
   return (
     <div className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content">

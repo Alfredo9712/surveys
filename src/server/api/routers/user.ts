@@ -13,7 +13,7 @@ const questionSchema = z.object({
   description: z.string(),
 });
 
-export const surveyRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -26,22 +26,18 @@ export const surveyRouter = createTRPCRouter({
     return ctx.prisma.example.findMany();
   }),
 
-  getById: protectedProcedure
+  getSurveysById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ input }) => {
-      const survey = prisma.survey.findMany({
-        where: {
-          id: input.id,
-        },
-        include: {
-          question: true,
-        },
+      const surveys = prisma.survey.findMany({
+        where: { userId: input.id },
+        include: { question: true },
       });
 
-      return survey;
+      return surveys;
     }),
 
-  create: protectedProcedure
+  createSurvey: protectedProcedure
     .input(
       z.object({
         survey: z.object({
@@ -49,15 +45,21 @@ export const surveyRouter = createTRPCRouter({
           description: z.string(),
           question: z.array(questionSchema || []),
         }),
+        id: z.string(),
       })
     )
     .mutation(({ input }) =>
-      prisma.survey.create({
+      prisma.user.update({
+        where: { id: input.id },
         data: {
-          title: input.survey.title,
-          description: input.survey.description,
-          question: {
-            create: input.survey.question,
+          survey: {
+            create: {
+              title: input.survey.title,
+              description: input.survey.description,
+              question: {
+                create: input.survey.question,
+              },
+            },
           },
         },
       })
