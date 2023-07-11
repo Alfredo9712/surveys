@@ -15,12 +15,41 @@ const Surveys = () => {
     );
   }
 
-  const { data } = api.user.getSurveysById.useQuery({
+  const { data, isLoading } = api.user.getSurveysById.useQuery({
     id: sessionData.user.id,
   });
-  console.log(data);
 
-  return <div>surveys</div>;
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!data)
+    return (
+      <h1>No surveys found, surveys will be displayed here when created</h1>
+    );
+  console.log(data);
+  return (
+    <div className="overflow-x-auto overflow-y-auto py-10">
+      <table className="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>title</th>
+            <th>questions</th>
+            <th>responses</th>
+            <th>active</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(({ id, title, question }, index) => (
+            <tr key={id}>
+              <th>{index}</th>
+              <td key={id}>{title}</td>
+              <td className="text-center">{question.length}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 };
 
 export default Surveys;
