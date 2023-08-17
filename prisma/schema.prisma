@@ -73,6 +73,7 @@ model Survey {
     User        User?      @relation(fields: [userId], references: [id])
     userId      String?
     question    Question[]
+    isActive    Boolean    @default(true)
 }
 
 model Question {

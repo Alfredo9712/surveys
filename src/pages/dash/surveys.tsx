@@ -39,11 +39,15 @@ const Surveys = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map(({ id, title, question }, index) => (
+          {data.map(({ id, title, question, isActive }, index) => (
             <tr key={id}>
               <th>{index}</th>
               <td key={id}>{title}</td>
               <td className="text-center">{question.length}</td>
+              <td className="text-center"> 0 </td>
+              <td className="text-center">
+                {isActive ? "Active" : "Not Active"}
+              </td>
             </tr>
           ))}
         </tbody>
