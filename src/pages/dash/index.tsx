@@ -87,12 +87,12 @@ const Dash = () => {
 
   const ctx = api.useContext();
 
-  const { mutate, isLoading } = api.user.createSurvey.useMutation({
+  const { mutate, isLoading } = api.survey.createSurvey.useMutation({
     onSuccess: () => {
       setSurvey(initialSurvey);
       setToastInfo({ message: "Survey created successfully", type: "success" });
       setShowToast(true);
-      void ctx.user.getSurveysById.invalidate();
+      void ctx.survey.getSurveysById.invalidate();
     },
   });
 

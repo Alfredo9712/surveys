@@ -13,7 +13,7 @@ const questionSchema = z.object({
   description: z.string(),
 });
 
-export const userRouter = createTRPCRouter({
+export const surveyRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -64,4 +64,19 @@ export const userRouter = createTRPCRouter({
         },
       })
     ),
+
+  updateIsActiveById: protectedProcedure
+    .input(z.object({ id: z.string(), isActive: z.boolean() }))
+    .mutation(({ input }) => {
+      const survey = prisma.survey.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          isActive: input.isActive,
+        },
+      });
+
+      return survey;
+    }),
 });

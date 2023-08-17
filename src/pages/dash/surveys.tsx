@@ -14,9 +14,16 @@ const Surveys = () => {
       <Toast message={"Must be signed in to create survey"} type={"error"} />
     );
   }
+  const ctx = api.useContext();
 
-  const { data, isLoading } = api.user.getSurveysById.useQuery({
+  const { data, isLoading } = api.survey.getSurveysById.useQuery({
     id: sessionData.user.id,
+  });
+
+  const { mutate } = api.survey.updateIsActiveById.useMutation({
+    onSuccess: () => {
+      void ctx.survey.getSurveysById.invalidate();
+    },
   });
 
   if (isLoading) return <div>Loading...</div>;
@@ -50,6 +57,7 @@ const Surveys = () => {
                   type="checkbox"
                   checked={!!isActive}
                   className="checkbox"
+                  onChange={() => mutate({ id, isActive: !isActive })}
                 />
               </td>
             </tr>
