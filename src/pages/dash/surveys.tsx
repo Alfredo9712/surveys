@@ -46,7 +46,11 @@ const Surveys = () => {
               <td className="text-center">{question.length}</td>
               <td className="text-center"> 0 </td>
               <td className="text-center">
-                {isActive ? "Active" : "Not Active"}
+                <input
+                  type="checkbox"
+                  checked={!!isActive}
+                  className="checkbox"
+                />
               </td>
             </tr>
           ))}
