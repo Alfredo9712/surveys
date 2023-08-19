@@ -33,17 +33,20 @@ const initialSurvey = {
 export const Toast = ({
   message = "Invalid form",
   type,
+  setShowToast,
 }: {
   message: string;
   type: string;
+  setShowToast: (showToast: boolean) => void;
 }) => {
   return (
-    <div className={`alert alert-${type} mb-5`}>
+    <div className={`alert ${type} mb-5`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6 shrink-0 stroke-current"
+        className="h-6 w-6 shrink-0 cursor-pointer stroke-current"
         fill="none"
         viewBox="0 0 24 24"
+        onClick={() => setShowToast(false)}
       >
         <path
           strokeLinecap="round"
@@ -80,17 +83,17 @@ const Dash = () => {
   }, [showToast]);
 
   if (!sessionData?.user?.id) {
-    return (
-      <Toast message={"Must be signed in to create survey"} type={"error"} />
-    );
+    return <h1>Not authorized</h1>;
   }
-
   const ctx = api.useContext();
 
   const { mutate, isLoading } = api.survey.createSurvey.useMutation({
     onSuccess: () => {
       setSurvey(initialSurvey);
-      setToastInfo({ message: "Survey created successfully", type: "success" });
+      setToastInfo({
+        message: "Survey created successfully",
+        type: "alert-success",
+      });
       setShowToast(true);
       void ctx.survey.getSurveysById.invalidate();
     },
@@ -133,7 +136,7 @@ const Dash = () => {
     });
     if (survey["title"] === "" || question.length === 0 || invalidForm) {
       //TODO: add more validation
-      setToastInfo({ message: "Invalid form", type: "error" });
+      setToastInfo({ message: "Invalid form", type: "alert-error" });
       setShowToast(true);
       return;
     }
@@ -144,7 +147,11 @@ const Dash = () => {
   return (
     <div className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content">
       {showToast && (
-        <Toast message={toastInfo["message"]} type={toastInfo["type"]} />
+        <Toast
+          message={toastInfo["message"]}
+          type={toastInfo["type"]}
+          setShowToast={setShowToast}
+        />
       )}
       <h1 className="color mb-4 text-4xl ">Create Survey</h1>
       {question.length <= 0 && (

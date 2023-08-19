@@ -10,9 +10,7 @@ const Surveys = () => {
   const { data: sessionData } = useSession();
 
   if (!sessionData?.user?.id) {
-    return (
-      <Toast message={"Must be signed in to create survey"} type={"error"} />
-    );
+    return <h1>Not authorized</h1>;
   }
   const ctx = api.useContext();
 
