@@ -74,6 +74,7 @@ model Survey {
     userId      String?
     question    Question[]
     isActive    Boolean    @default(true)
+    responses   Int        @default(0)
 }
 
 model Question {

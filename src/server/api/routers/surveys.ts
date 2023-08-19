@@ -79,4 +79,22 @@ export const surveyRouter = createTRPCRouter({
 
       return survey;
     }),
+
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      const survey = prisma.survey.findUnique({
+        where: {
+          id: input.id,
+        },
+        select: {
+          description: true,
+          isActive: true,
+          question: true,
+          title: true,
+        },
+      });
+
+      return survey;
+    }),
 });

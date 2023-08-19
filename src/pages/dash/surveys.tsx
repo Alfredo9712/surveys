@@ -34,7 +34,7 @@ const Surveys = () => {
     );
   console.log(data);
   return (
-    <div className="overflow-x-auto overflow-y-auto py-10">
+    <div className="overflow-x-auto overflow-y-auto  py-10">
       <table className="table">
         <thead>
           <tr>
@@ -46,12 +46,12 @@ const Surveys = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map(({ id, title, question, isActive }, index) => (
+          {data.map(({ id, title, question, isActive, responses }, index) => (
             <tr key={id}>
               <th>{index}</th>
               <td key={id}>{title}</td>
               <td className="text-center">{question.length}</td>
-              <td className="text-center"> 0 </td>
+              <td className="text-center">{responses}</td>
               <td className="text-center">
                 <input
                   type="checkbox"
