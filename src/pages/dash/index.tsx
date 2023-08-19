@@ -10,7 +10,7 @@ import { api } from "~/utils/api";
 
 import type { GetServerSidePropsContext } from "next";
 
-export type DropdownType = "input" | "dropdown" | "textarea";
+export type DropdownType = "input" | "dropdown" | "textarea" | "number";
 
 export type Survey = {
   title: string;
@@ -124,7 +124,14 @@ const Dash = () => {
   };
 
   const handleSubmitSurvey = () => {
-    if (survey["title"] === "" || question.length === 0) {
+    let invalidForm = false;
+    question.forEach((q) => {
+      if (q["description"] === "" || q["type"] === "") {
+        invalidForm = true;
+        return;
+      }
+    });
+    if (survey["title"] === "" || question.length === 0 || invalidForm) {
       //TODO: add more validation
       setToastInfo({ message: "Invalid form", type: "error" });
       setShowToast(true);

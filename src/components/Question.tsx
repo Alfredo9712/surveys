@@ -19,8 +19,8 @@ const Question: FC<QuestionProps> = ({
 
   const questionType = [
     { display: "Input", formValue: "input" },
-    { display: "Dropdown", formValue: "Dropdown" },
     { display: "Text Area", formValue: "textArea" },
+    { display: "Number", formValue: "number" },
   ];
 
   return (
