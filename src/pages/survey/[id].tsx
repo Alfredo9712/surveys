@@ -9,6 +9,8 @@ import { api } from "~/utils/api";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from "superjson";
+import { Formik } from "formik";
+import { useMemo } from "react";
 
 const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { id } = props;
@@ -21,14 +23,69 @@ const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   if (!data) return <div>Survey not found</div>;
 
-  const { isActive, title } = data;
+  const { isActive, title, question } = data;
 
   if (!isActive) return <div>{title} is no longer active</div>;
 
+  const mapIndex = [
+    "first",
+    "second",
+    "third",
+    "fourth",
+    "fifth",
+    "sixth",
+    "seventh",
+    "eigth",
+    "ninth",
+    "tenth",
+  ];
+
   return (
-    <div>
-      <h1>{title}</h1>
-    </div>
+    <Formik
+      initialValues={{
+        answers: question.map((q) => {
+          if (q.type === "text" || q.type === "textArea") {
+            return {
+              questionId: q.id,
+              input: "", // For text input questions
+            };
+          }
+          return {
+            questionId: q.id,
+            input: 0, // For text input questions
+          };
+        }),
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        console.log(values);
+      }}
+    >
+      {({ values, handleSubmit, handleChange, setFieldValue }) => {
+        console.log(values);
+        return (
+          <form onSubmit={handleSubmit}>
+            {question.map((q, index) => {
+              return (
+                <input
+                  key={index}
+                  type="text"
+                  name={`answers.${index}.text`}
+                  value={values.answers[index]?.input}
+                  onChange={(e) => {
+                    if (isNaN(+e.target.value)) return;
+
+                    void setFieldValue(
+                      `answers.${index}.input`,
+                      +e.target.value
+                    );
+                  }}
+                />
+              );
+            })}
+          </form>
+        );
+      }}
+    </Formik>
   );
 };
 
