@@ -117,45 +117,24 @@ export const surveyRouter = createTRPCRouter({
         surveyId: z.string(),
       })
     )
-    .mutation(({ input }) => {
+    .mutation(async ({ input }) => {
       const { answer } = input;
 
-      // await prisma.survey.update({
-      //   where: {
-      //     id: input.surveyId,
-      //   },
-      //   {answer.map(answer => {
-      //     return {
-      //       data: {
-      //         question: {
-      //           answer: answer
-      //         }
-      //       }
-      //     }
-      //   })}
-      //   // data: {
-      //   //   question: {
-      //   //     updateMany: {
-
-      //   //       // {answer.map(answer => )}
-      //   //       // where: {
-      //   //       //   id: "e",
-      //   //       // },
-      //   //       // data: {
-      //   //       //   type: "text",
-      //   //       // },
-      //   //     },
-      //   //   },
-      //   // },
-      // });
-      answer.map(async (item) => {
-        await prisma.answer.create({
-          data: {
-            questionId: item.questionId,
-            text: item.text,
-            value: item.value,
+      await prisma.survey.update({
+        where: {
+          id: input.surveyId,
+        },
+        data: {
+          responses: { increment: 1 },
+          question: {
+            update: answer.map((item) => ({
+              where: { id: item.questionId },
+              data: {
+                answer: { create: { text: item.text, value: item.value } },
+              },
+            })),
           },
-        });
+        },
       });
       return;
     }),

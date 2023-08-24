@@ -5,6 +5,7 @@ import { authOptions } from "../../server/auth";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { Toast } from ".";
+import Link from "next/link";
 
 const Surveys = () => {
   const { data: sessionData } = useSession();
@@ -41,6 +42,7 @@ const Surveys = () => {
             <th>questions</th>
             <th>responses</th>
             <th>active</th>
+            <th>view survey</th>
           </tr>
         </thead>
         <tbody>
@@ -57,6 +59,11 @@ const Surveys = () => {
                   className="checkbox"
                   onChange={() => mutate({ id, isActive: !isActive })}
                 />
+              </td>
+              <td>
+                <Link href={`/survey/${id}`} target="_blank">
+                  survey link
+                </Link>
               </td>
             </tr>
           ))}
