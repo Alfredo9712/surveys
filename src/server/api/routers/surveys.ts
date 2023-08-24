@@ -31,7 +31,13 @@ export const surveyRouter = createTRPCRouter({
     .query(({ input }) => {
       const surveys = prisma.survey.findMany({
         where: { userId: input.id },
-        include: { question: true },
+        include: {
+          question: {
+            include: {
+              answer: true,
+            },
+          },
+        },
       });
 
       return surveys;
@@ -96,5 +102,61 @@ export const surveyRouter = createTRPCRouter({
       });
 
       return survey;
+    }),
+
+  submit: publicProcedure
+    .input(
+      z.object({
+        answer: z.array(
+          z.object({
+            questionId: z.string(),
+            text: z.string().optional(),
+            value: z.number().optional(),
+          })
+        ),
+        surveyId: z.string(),
+      })
+    )
+    .mutation(({ input }) => {
+      const { answer } = input;
+
+      // await prisma.survey.update({
+      //   where: {
+      //     id: input.surveyId,
+      //   },
+      //   {answer.map(answer => {
+      //     return {
+      //       data: {
+      //         question: {
+      //           answer: answer
+      //         }
+      //       }
+      //     }
+      //   })}
+      //   // data: {
+      //   //   question: {
+      //   //     updateMany: {
+
+      //   //       // {answer.map(answer => )}
+      //   //       // where: {
+      //   //       //   id: "e",
+      //   //       // },
+      //   //       // data: {
+      //   //       //   type: "text",
+      //   //       // },
+      //   //     },
+      //   //   },
+      //   // },
+      // });
+      answer.map(async (item) => {
+        await prisma.answer.create({
+          data: {
+            questionId: item.questionId,
+            text: item.text,
+            value: item.value,
+          },
+        });
+      });
+      return;
     }),
 });
