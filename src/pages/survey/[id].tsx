@@ -1,18 +1,17 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import { Formik } from "formik";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Toast } from "../dash";
+import { api } from "~/utils/api";
+import { prisma } from "~/server/db";
+import { appRouter } from "~/server/api/root";
 
 import type {
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
-
-import { api } from "~/utils/api";
-import { prisma } from "~/server/db";
-import { appRouter } from "~/server/api/root";
-import { Toast } from "../dash";
 
 const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [showToast, setShowToast] = useState(false);

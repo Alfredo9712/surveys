@@ -1,11 +1,10 @@
 import { z } from "zod";
-
+import { prisma } from "~/server/db";
 import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { prisma } from "~/server/db";
 
 const questionSchema = z.object({
   id: z.string(),
