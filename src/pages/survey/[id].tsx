@@ -40,8 +40,6 @@ const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   if (!isActive)
     return <h1 className="color mb-4 text-4xl ">Survey is no longer active</h1>;
 
-  const ctx = api.useContext();
-
   return (
     <Formik
       initialValues={{
