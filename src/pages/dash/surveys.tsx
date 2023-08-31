@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import { Toast } from ".";
 import Link from "next/link";
 
 const Surveys = () => {
@@ -27,11 +26,15 @@ const Surveys = () => {
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!data)
+  if (!data || data.length === 0)
     return (
-      <h1>No surveys found, surveys will be displayed here when created</h1>
+      <div className="mt-9">
+        <Link href="/dash" className="link-primary link text-4xl">
+          You have no surveys, create one
+        </Link>
+      </div>
     );
-  console.log(data);
+
   return (
     <div className="overflow-x-auto overflow-y-auto  py-10">
       <table className="table">
@@ -48,8 +51,10 @@ const Surveys = () => {
         <tbody>
           {data.map(({ id, title, question, isActive, responses }, index) => (
             <tr key={id}>
-              <th>{index}</th>
-              <td key={id}>{title}</td>
+              <th>{index + 1}</th>
+              <td key={id} className="capitalize">
+                {title}
+              </td>
               <td className="text-center">{question.length}</td>
               <td className="text-center">{responses}</td>
               <td className="text-center">
@@ -62,7 +67,7 @@ const Surveys = () => {
               </td>
               <td>
                 <Link href={`/survey/${id}`} target="_blank">
-                  survey link
+                  Survey link
                 </Link>
               </td>
             </tr>

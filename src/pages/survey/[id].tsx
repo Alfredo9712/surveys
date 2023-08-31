@@ -1,7 +1,7 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import { Formik } from "formik";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import type {
   GetStaticPaths,
@@ -12,8 +12,11 @@ import type {
 import { api } from "~/utils/api";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
+import { Toast } from "../dash";
 
 const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [showToast, setShowToast] = useState(false);
+  const [toastInfo, setToastInfo] = useState({ message: "", type: "" });
   const { id } = props;
 
   const { data, isLoading } = api.survey.getById.useQuery({
@@ -22,9 +25,23 @@ const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const { mutate } = api.survey.submit.useMutation({
     onSuccess: () => {
-      console.log("survey has been submitted");
+      setShowToast(true);
+      setToastInfo({ message: "Survey Submitted!", type: "success" });
     },
   });
+
+  useEffect(() => {
+    if (!showToast) return;
+
+    const invalidFormTimeout = setInterval(() => {
+      setShowToast(false);
+      setToastInfo({ message: "", type: "" });
+    }, 3500);
+
+    return () => {
+      clearInterval(invalidFormTimeout);
+    };
+  }, [showToast]);
 
   if (isLoading)
     return <h1 className="color mb-4 text-4xl ">Loading survey data</h1>;
@@ -41,7 +58,7 @@ const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     return <h1 className="color mb-4 text-4xl ">Survey is no longer active</h1>;
 
   return (
-    <div className=" flex h-screen flex-col items-center pt-9">
+    <div className=" mx-auto flex h-screen  max-w-4xl flex-col items-center pt-9">
       <Formik
         initialValues={{
           answers: question.map((q) => {
@@ -64,8 +81,15 @@ const SurveyPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         {({ values, handleSubmit, setFieldValue }) => {
           console.log(values);
           return (
-            <div className="flex flex-col gap-8">
-              <h1 className="color text-4xl ">{title}</h1>
+            <div className="flex w-full	flex-col items-center gap-8">
+              {showToast && (
+                <Toast
+                  message={toastInfo["message"]}
+                  type={toastInfo["type"]}
+                  setShowToast={setShowToast}
+                />
+              )}
+              <h1 className="color text-4xl capitalize">{title}</h1>
               <form onSubmit={handleSubmit}>
                 {question.map((q, index) => {
                   const { type, description } = question[index] || {};

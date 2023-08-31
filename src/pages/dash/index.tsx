@@ -65,7 +65,7 @@ const Dash = () => {
   const [survey, setSurvey] = useState<Survey>(initialSurvey);
   const [showToast, setShowToast] = useState(false);
   const [toastInfo, setToastInfo] = useState({ message: "", type: "" });
-
+  const topDivRef = React.useRef<HTMLDivElement>(null);
   const { question } = survey;
 
   // clear invalid form toast after 3.5 seconds
@@ -135,7 +135,7 @@ const Dash = () => {
       }
     });
     if (survey["title"] === "" || question.length === 0 || invalidForm) {
-      //TODO: add more validation
+      topDivRef.current?.scrollTo(0, 0);
       setToastInfo({ message: "Invalid form", type: "alert-error" });
       setShowToast(true);
       return;
@@ -145,7 +145,10 @@ const Dash = () => {
   };
 
   return (
-    <div className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content">
+    <div
+      className="hide flex h-full flex-col overflow-y-auto py-10 text-info-content"
+      ref={topDivRef}
+    >
       {showToast && (
         <Toast
           message={toastInfo["message"]}
